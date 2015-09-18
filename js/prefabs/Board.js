@@ -98,3 +98,71 @@ Match3.Board.prototype.checkAdjacent = function(source, target) {
 
     return isAdjacent;
 };
+
+//check whether a single block is chained or not
+Match3.Board.prototype.isChained = function(block) {
+    var isChained = false;
+    var row = block.row;
+    var col = block.col;
+    var variation = this.grid[row][col];
+
+    //left
+    if(variation == this.grid[row][col - 1] && variation == this.grid[row][col - 2]) {
+        isChained = true;
+    }
+
+    //right
+    if(variation == this.grid[row][col + 1] && variation == this.grid[row][col + 2]) {
+        isChained = true;
+    }
+
+    //up
+    if(this.grid[row - 2]) {
+        if(variation == this.grid[row - 1][col] && variation == this.grid[row - 2][col]) {
+            isChained = true;
+        }
+    }
+
+    //down
+    if(this.grid[row + 2]) {
+        if(variation == this.grid[row + 1][col] && variation == this.grid[row + 2][col]) {
+            isChained = true;
+        }
+    }
+
+    //center horizontal
+    if(variation == this.grid[row][col - 1] && variation == this.grid[row][col + 1]) {
+        isChained = true;
+    }
+
+    //center vertical
+    if(this.grid[row - 1] && this.grid[row + 1]) {
+        if(variation == this.grid[row - 1][col] && variation == this.grid[row + 1][col]) {
+            isChained = true;
+        }
+    }
+
+    return isChained;
+};
+
+Match3.Board.prototype.findAllChains = function() {
+    var chainedBlocks = [];
+    var i, j;
+
+    for(i = 0; i < this.rows; i++) {
+        for(j = 0; j < this.cols; j++) {
+            if(this.isChained({row: i, col: j})) {
+                chainedBlocks.push({row: i, col: j});
+            }
+        }
+    }
+    return chainedBlocks;
+};
+
+Match3.Board.prototype.clearChains = function() {
+    var chainedBlocks = this.findAllChains();
+
+    chainedBlocks.forEach(function(block) {
+        this.grid[block.row][block.col] = 0;
+    }, this);
+};
