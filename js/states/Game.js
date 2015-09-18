@@ -12,5 +12,6 @@ Match3.GameState = {
         this.background = this.game.add.sprite(0, 0, 'background');
 
         this.board = new Match3.Board(this, this.NUM_ROWS, this.NUM_COLS, this.NUM_VARIATIONS);
+        this.board.consoleLog();
     }
 };
