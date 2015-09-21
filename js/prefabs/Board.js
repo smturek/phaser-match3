@@ -20,7 +20,7 @@ Match3.Board = function(state, rows, cols, blockVariations) {
 
     //reserve grid on the top for when new bricks are needed
     this.reserveGrid = [];
-    this.RESERVE_ROW = 5;
+    this.RESERVE_ROW = rows;
 
     for(i = 0; i < this.RESERVE_ROW; i++) {
         this.reserveGrid.push([]);
@@ -175,4 +175,40 @@ Match3.Board.prototype.dropBlock = function(sourceRow, targetRow, col) {
 Match3.Board.prototype.dropReserveBlock = function(sourceRow, targetRow, col) {
     this.grid[targetRow][col] = this.reserveGrid[sourceRow][col];
     this.reserveGrid[sourceRow][col] = 0;
+};
+
+Match3.Board.prototype.updateGrid = function() {
+    var i, j, k, foundBlock;
+
+    for(i = this.rows - 1; i>= 0; i--) {
+        for(j = 0; j< this.cols; j++) {
+            //if the block is zero, then climb up to get non zero
+            if(this.grid[i][j] === 0) {
+                foundBlock = false;
+
+                //climb up main grid
+                for(k = i - 1; k >= 0; k--) {
+                    if(this.grid[k][j]) {
+                        this.dropBlock(k, i, j);
+                        foundBlock = true;
+                        break;
+                    }
+                }
+
+                //climb up reserve grid
+                if(!foundBlock) {
+                    for(k = this.RESERVE_ROW - 1; k >= 0; k--) {
+                        if(this.reserveGrid[k][j]) {
+                            this.dropReserveBlock(k, i, j);
+                            break;
+                        }
+                    }
+                }
+            }
+
+        }
+    }
+
+    //repopulate the reserve
+    this.populateReserveGrid();
 };
