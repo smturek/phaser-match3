@@ -166,3 +166,13 @@ Match3.Board.prototype.clearChains = function() {
         this.grid[block.row][block.col] = 0;
     }, this);
 };
+
+Match3.Board.prototype.dropBlock = function(sourceRow, targetRow, col) {
+    this.grid[targetRow][col] = this.grid[sourceRow][col];
+    this.grid[sourceRow][col] = 0;
+};
+
+Match3.Board.prototype.dropReserveBlock = function(sourceRow, targetRow, col) {
+    this.grid[targetRow][col] = this.reserveGrid[sourceRow][col];
+    this.reserveGrid[sourceRow][col] = 0;
+};
