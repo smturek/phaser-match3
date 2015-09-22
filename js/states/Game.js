@@ -51,5 +51,16 @@ Match3.GameState = {
             }
         }
         this.game.world.bringToTop(this.blocks);
+    },
+    getBlockFromColRow: function(position) {
+        var foundBlock;
+
+        this.blocks.forEachAlive(function(block) {
+            if(block.row === position.row && block.col === position.col) {
+                foundBlock = block
+            }
+        }, this);
+
+        return foundBlock;
     }
 };
